@@ -9,7 +9,7 @@ Route::get('/', fn() => view('welcome'))->middleware('auth');
 Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest');
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
 
-Route::get('/login', [SessionsController::class, 'create'])->middleware('guest');
+Route::get('/login', [SessionsController::class, 'create'])->middleware('guest')->name('login');
 Route::post('/login', [SessionsController::class, 'store'])->middleware('guest');
 
 Route::post('/logout', [SessionsController::class, 'destroy'])->middleware('auth');

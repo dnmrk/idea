@@ -25,11 +25,11 @@ label {
         calc(var(--spacing) * 1) var(--color-primary);
 }
 
-@media (min-width: var(--breakpoint-md)) {
+/* @media (min-width: var(--breakpoint-md)) {
     .input {
         font-size: var(--text-sm);
     }
-}
+} */
 
 .textarea {
     border-radius: var(--radius-md);
