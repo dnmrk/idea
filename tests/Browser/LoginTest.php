@@ -5,7 +5,7 @@ use App\Models\User;
 it('logs in a user', function () {
     $user = User::factory()->create([
         'email' => 'john@example.com',
-        'password' => 'password123!@#'
+        'password' => 'password123!@#',
     ]);
 
     visit('/login')
@@ -16,7 +16,6 @@ it('logs in a user', function () {
 
     $this->assertAuthenticated();
 });
-
 
 it('logs out a user', function () {
     $user = User::factory()->create();
