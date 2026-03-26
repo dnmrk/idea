@@ -47,7 +47,9 @@
             <form x-data="{ 
                     status: 'pending',
                     newLink: '',
-                    links: []
+                    links: [],
+                    newSteps: '',
+                    steps: []
                 }" 
                 method="POST" 
                 action="{{ route('idea.store') }}"
@@ -76,8 +78,59 @@
                         <x-form.error name="status" />
                     </div>
 
-                    <x-form.field label="Description" name="description" type="textarea"
-                        placeholder="Describe your idea..." autofocus />
+                    <x-form.field 
+                        label="Description" 
+                        name="description" 
+                        type="textarea"
+                        placeholder="Describe your idea..." 
+                        autofocus 
+                    />
+
+                    <div>
+                        <fieldset class="space-y-3">
+                            <legend class="label">Actionable Steps</legend>
+
+                            <template x-for="(step, index) in steps" :key="step">
+                                <div class="flex gap-x-2 items-center">
+                                    <input name="steps[]" x-model="step" class="input" readonly />
+
+                                    <button
+                                        type="button"
+                                        aria-label="Remove step"
+                                        @click="steps.splice(index, 1)"
+                                        class="form-muted-icon"
+                                    >
+                                        <x-icons.close />
+                                    </button>
+                                </div>
+                                
+                            </template>
+
+                            <div class="flex gap-x-2 items-center">
+                                <input 
+                                    x-model="newSteps"
+                                    id="new-step"
+                                    data-test="new-step"
+                                    placeholder="What needs to be done?"
+                                    class="input flex-1"
+                                    spellcheck="false" 
+                                />
+
+                                <button
+                                    type="button" 
+                                    @click="steps.push(newSteps); newSteps = '';"
+                                    data-test="submit-new-step-button"
+                                    :disabled="newSteps.trim().length === 0"
+                                    aria-label="Add new step"
+                                    class="form-muted-icon"
+                                >
+                                    <x-icons.close class="rotate-45" />
+                                </button>
+                            </div>
+
+                            <x-form.error name="steps" />
+                        </fieldset>
+                    </div>
 
                     <div>
                         <fieldset class="space-y-3">
@@ -85,7 +138,7 @@
 
                             <template x-for="(link, index) in links" :key="link">
                                 <div class="flex gap-x-2 items-center">
-                                    <input name="links[]" x-model="link" class="input" />
+                                    <input name="links[]" x-model="link" class="input" readonly />
 
                                     <button
                                         type="button"
@@ -122,6 +175,8 @@
                                     <x-icons.close class="rotate-45" />
                                 </button>
                             </div>
+
+                            <x-form.error name="links" />
                         </fieldset>
                     </div>
 
