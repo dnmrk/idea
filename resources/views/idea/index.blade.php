@@ -24,6 +24,13 @@
             <div class="grid md:grid-cols-2 gap-6">
                 @forelse ($ideas as $idea)
                     <x-card href="{{ route('idea.show', $idea) }}">
+                        @if ($idea->image_path)
+                            <div class="mb-4 -mx-4 -mt-4 rounded-t-lg overflow-hidden">
+                                <img src="{{ asset('storage/' . $idea->image_path) }}" alt=""
+                                    class="w-full h-48 object-cover" />
+                            </div>
+                        @endif
+
                         <h3 class="text-foreground text-lg">{{ $idea->title }}</h3>
                         <div class="mt-1">
                             <x-idea.status-label status="{{ $idea->status }}">
@@ -44,16 +51,14 @@
         </div>
 
         <x-modal name="create-idea" title="New Idea">
-            <form x-data="{ 
-                    status: 'pending',
-                    newLink: '',
-                    links: [],
-                    newSteps: '',
-                    steps: []
-                }" 
-                method="POST" 
-                action="{{ route('idea.store') }}"
-            >
+            <form x-data="{
+                status: 'pending',
+                newLink: '',
+                links: [],
+                newSteps: '',
+                steps: []
+            }" method="POST" action="{{ route('idea.store') }}"
+                enctype="multipart/form-data">
                 @csrf
 
                 <div class="space-y-6">
@@ -78,13 +83,15 @@
                         <x-form.error name="status" />
                     </div>
 
-                    <x-form.field 
-                        label="Description" 
-                        name="description" 
-                        type="textarea"
-                        placeholder="Describe your idea..." 
-                        autofocus 
-                    />
+                    <x-form.field label="Description" name="description" type="textarea"
+                        placeholder="Describe your idea..." autofocus />
+
+                    <div class="space-y-2">
+                        <label for="image" class="label">Featured Image</label>
+
+                        <input type="file" name="image" accept="image/*" />
+                        <x-form.error name="image" />
+                    </div>
 
                     <div>
                         <fieldset class="space-y-3">
@@ -94,36 +101,21 @@
                                 <div class="flex gap-x-2 items-center">
                                     <input name="steps[]" x-model="step" class="input" readonly />
 
-                                    <button
-                                        type="button"
-                                        aria-label="Remove step"
-                                        @click="steps.splice(index, 1)"
-                                        class="form-muted-icon"
-                                    >
+                                    <button type="button" aria-label="Remove step" @click="steps.splice(index, 1)"
+                                        class="form-muted-icon">
                                         <x-icons.close />
                                     </button>
                                 </div>
-                                
+
                             </template>
 
                             <div class="flex gap-x-2 items-center">
-                                <input 
-                                    x-model="newSteps"
-                                    id="new-step"
-                                    data-test="new-step"
-                                    placeholder="What needs to be done?"
-                                    class="input flex-1"
-                                    spellcheck="false" 
-                                />
+                                <input x-model="newSteps" id="new-step" data-test="new-step"
+                                    placeholder="What needs to be done?" class="input flex-1" spellcheck="false" />
 
-                                <button
-                                    type="button" 
-                                    @click="steps.push(newSteps); newSteps = '';"
-                                    data-test="submit-new-step-button"
-                                    :disabled="newSteps.trim().length === 0"
-                                    aria-label="Add new step"
-                                    class="form-muted-icon"
-                                >
+                                <button type="button" @click="steps.push(newSteps); newSteps = '';"
+                                    data-test="submit-new-step-button" :disabled="newSteps.trim().length === 0"
+                                    aria-label="Add new step" class="form-muted-icon">
                                     <x-icons.close class="rotate-45" />
                                 </button>
                             </div>
@@ -140,38 +132,22 @@
                                 <div class="flex gap-x-2 items-center">
                                     <input name="links[]" x-model="link" class="input" readonly />
 
-                                    <button
-                                        type="button"
-                                        aria-label="Remove link"
-                                        @click="links.splice(index, 1)"
-                                        class="form-muted-icon"
-                                    >
+                                    <button type="button" aria-label="Remove link" @click="links.splice(index, 1)"
+                                        class="form-muted-icon">
                                         <x-icons.close />
                                     </button>
                                 </div>
-                                
+
                             </template>
 
                             <div class="flex gap-x-2 items-center">
-                                <input 
-                                    x-model="newLink" 
-                                    type="url" 
-                                    id="new-link" 
-                                    data-test="new-link"
-                                    placeholder="http://example.com" 
-                                    autocomplete="url"
-                                    class="input flex-1" 
-                                    spellcheck="false" 
-                                />
+                                <input x-model="newLink" type="url" id="new-link" data-test="new-link"
+                                    placeholder="http://example.com" autocomplete="url" class="input flex-1"
+                                    spellcheck="false" />
 
-                                <button
-                                    type="button" 
-                                    @click="links.push(newLink); newLink = '';"
-                                    data-test="submit-new-link-button"
-                                    :disabled="newLink.trim().length === 0"
-                                    aria-label="Add new link"
-                                    class="form-muted-icon"
-                                >
+                                <button type="button" @click="links.push(newLink); newLink = '';"
+                                    data-test="submit-new-link-button" :disabled="newLink.trim().length === 0"
+                                    aria-label="Add new link" class="form-muted-icon">
                                     <x-icons.close class="rotate-45" />
                                 </button>
                             </div>
