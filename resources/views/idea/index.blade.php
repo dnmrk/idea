@@ -52,13 +52,15 @@
 
         <x-modal name="create-idea" title="New Idea">
             <form x-data="{
+                hasImage: false,
                 status: 'pending',
                 newLink: '',
                 links: [],
                 newSteps: '',
                 steps: []
             }" method="POST" action="{{ route('idea.store') }}"
-                enctype="multipart/form-data">
+                :enctype="hasImage ? 'multipart/form-data' : false"
+            >
                 @csrf
 
                 <div class="space-y-6">
@@ -84,12 +86,17 @@
                     </div>
 
                     <x-form.field label="Description" name="description" type="textarea"
-                        placeholder="Describe your idea..." autofocus />
+                        placeholder="Describe your idea..." />
 
                     <div class="space-y-2">
                         <label for="image" class="label">Featured Image</label>
 
-                        <input type="file" name="image" accept="image/*" />
+                        <input 
+                            type="file" 
+                            name="image" 
+                            accept="image/*" 
+                            @change="hasImage = $event.target.files.length > 0;"
+                        />
                         <x-form.error name="image" />
                     </div>
 

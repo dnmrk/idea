@@ -12,7 +12,13 @@ Route::redirect('/', '/ideas');
 
 Route::get('/ideas', [IdeaController::class, 'index'])->name('idea.index')->middleware('auth');
 Route::post('/ideas', [IdeaController::class, 'store'])->name('idea.store')->middleware('auth');
-Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('idea.show')->middleware('auth');
+
+Route::get('/ideas/{idea}', [IdeaController::class, 'show'])
+    ->name('idea.show')->middleware('auth');
+    // ->middleware(['auth', 'can:workWith,idea']);
+    // ->middleware('auth')
+    // ->can('workWith', 'idea');
+
 Route::delete('/ideas/{idea}', [IdeaController::class, 'destroy'])->name('idea.destroy')->middleware('auth');
 
 Route::patch('/steps/{step}', [StepController::class, 'update'])->name('step.update')->middleware('auth');
