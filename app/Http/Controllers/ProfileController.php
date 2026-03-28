@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Notifications\EmailChanged;
@@ -14,7 +16,7 @@ class ProfileController extends Controller
     public function edit()
     {
         return view('profile.edit', [
-            'user' => Auth::user()
+            'user' => Auth::user(),
         ]);
     }
 
@@ -28,7 +30,7 @@ class ProfileController extends Controller
                 'required', 'string', 'email', 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
-            'password' => ['nullable', RulesPassword::default()]
+            'password' => ['nullable', RulesPassword::default()],
         ]);
 
         $originalEmail = $user->email;
@@ -36,7 +38,7 @@ class ProfileController extends Controller
         Auth::user()->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password ? $request->password : $user->password,
+            'password' => $request->password ?: $user->password,
         ]);
 
         if ($originalEmail !== $request->email) {

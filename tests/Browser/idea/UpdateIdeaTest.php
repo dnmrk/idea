@@ -3,7 +3,6 @@
 use App\Models\Idea;
 use App\Models\User;
 
-
 it('it edits an existing idea', function () {
     $this->actingAs($user = User::factory()->create());
 
@@ -25,7 +24,7 @@ it('it edits an existing idea', function () {
         'title' => 'Some Example Title',
         'status' => 'completed',
         'description' => 'An example description.',
-        'links' => [$idea->link[0], 'https://laravel.com']
+        'links' => [$idea->link[0], 'https://laravel.com'],
     ]);
 
     expect($idea->steps)->toHaveCount(1);

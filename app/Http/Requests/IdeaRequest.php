@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 use App\IdeaStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
 class IdeaRequest extends FormRequest
 {
@@ -38,6 +39,7 @@ class IdeaRequest extends FormRequest
         ];
     }
 
+    #[Override]
     protected function prepareForValidation(): void
     {
         if ($this->has('steps')) {
@@ -48,7 +50,7 @@ class IdeaRequest extends FormRequest
             }
 
             $this->merge([
-                'steps' => $steps
+                'steps' => $steps,
             ]);
         }
     }

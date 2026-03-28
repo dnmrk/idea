@@ -33,7 +33,7 @@ class CreateIdea
 
             $steps = collect($attributes['steps'] ?? [])->map(fn ($step) => [
                 'description' => $step['description'],
-                'completed' => $step['completed']
+                'completed' => $step['completed'],
             ]);
 
             $idea->steps()->createMany($steps);

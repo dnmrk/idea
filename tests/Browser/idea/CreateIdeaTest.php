@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Idea;
 use App\Models\User;
 
 it('creates a new idea', function () {
@@ -26,7 +25,7 @@ it('creates a new idea', function () {
         'title' => 'Some Example Title',
         'status' => 'completed',
         'description' => 'An example description.',
-        'links' => ['https://laracasts.com', 'https://laravel.com']
+        'links' => ['https://laracasts.com', 'https://laravel.com'],
     ]);
 
     expect($idea->steps)->toHaveCount(2);

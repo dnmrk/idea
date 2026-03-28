@@ -17,9 +17,9 @@ Route::post('/ideas', [IdeaController::class, 'store'])->name('idea.store')->mid
 
 Route::get('/ideas/{idea}', [IdeaController::class, 'show'])
     ->name('idea.show')->middleware('auth');
-    // ->middleware(['auth', 'can:workWith,idea']);
-    // ->middleware('auth')
-    // ->can('workWith', 'idea');
+// ->middleware(['auth', 'can:workWith,idea']);
+// ->middleware('auth')
+// ->can('workWith', 'idea');
 
 Route::patch('/ideas/{idea}', [IdeaController::class, 'update'])->name('idea.update')->middleware('auth');
 
