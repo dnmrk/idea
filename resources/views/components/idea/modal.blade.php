@@ -8,7 +8,7 @@
             newLink: '',
             links: @js(old('links', $idea->links ?? [])),
             newSteps: '',
-            steps: @js(old('steps', $idea->steps->map(fn($step) => $step->description)))
+            steps: @js(old('steps', $idea->steps->map->only(["id", "description", "completed"]))),
         }" 
         method="POST" 
         action="{{ $idea->exists ? route('idea.update', $idea) : route('idea.store') }}"
@@ -65,8 +65,7 @@
                     </div>
                 @endif
 
-                <input type="file" name="image" accept="image/*"
-                    @change="hasImage = $event.target.files.length > 0;" />
+                <input type="file" name="image" accept="image/jpg" @change="hasImage = $event.target.files.length > 0;" />
                 <x-form.error name="image" />
             </div>
 
@@ -74,9 +73,10 @@
                 <fieldset class="space-y-3">
                     <legend class="label">Actionable Steps</legend>
 
-                    <template x-for="(step, index) in steps" :key="step">
+                    <template x-for="(step, index) in steps" :key="step.id || index">
                         <div class="flex gap-x-2 items-center">
-                            <input name="steps[]" x-model="step" class="input" readonly />
+                            <input :name="`steps[${index}][description]`" x-model="step.description" class="input" readonly />
+                            <input type="hidden" :name="`steps[${index}][completed]`" x-model="step.completed" class="input" readonly />
 
                             <button type="button" aria-label="Remove step" @click="steps.splice(index, 1)"
                                 class="form-muted-icon">
@@ -90,9 +90,16 @@
                         <input x-model="newSteps" id="new-step" data-test="new-step"
                             placeholder="What needs to be done?" class="input flex-1" spellcheck="false" />
 
-                        <button type="button" @click="steps.push(newSteps); newSteps = '';"
+                        <button 
+                            type="button"
+                            @click="
+                                steps.push({description: newSteps.trim(), completed: false}); 
+                                newSteps = '';
+                            "
                             data-test="submit-new-step-button" :disabled="newSteps.trim().length === 0"
-                            aria-label="Add new step" class="form-muted-icon">
+                            aria-label="Add new step" 
+                            class="form-muted-icon"
+                        >
                             <x-icons.close class="rotate-45" />
                         </button>
                     </div>

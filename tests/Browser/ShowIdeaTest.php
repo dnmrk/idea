@@ -16,6 +16,5 @@ it('disallows accessing an idea you did not create', function () {
 
     $idea = Idea::factory()->create();
 
-
     $this->get(route('idea.show', $idea))->assertRedirectToRoute('login');
 });

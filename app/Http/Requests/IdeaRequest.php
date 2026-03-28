@@ -32,8 +32,24 @@ class IdeaRequest extends FormRequest
             'links' => ['nullable', 'array'],
             'links.*' => ['url', 'max:255'],
             'steps' => ['nullable', 'array'],
-            'steps.*' => ['string', 'max:255'],
+            'steps.*.description' => ['string', 'max:255'],
+            'steps.*.completed' => ['boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('steps')) {
+            $steps = [];
+            foreach ($this->steps as $index => $step) {
+                $steps[$index]['description'] = $step['description'];
+                $steps[$index]['completed'] = filter_var($step['completed'], FILTER_VALIDATE_BOOLEAN);
+            }
+
+            $this->merge([
+                'steps' => $steps
+            ]);
+        }
     }
 }
